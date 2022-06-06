@@ -4,12 +4,16 @@ OBJ_DIR = obj/
 SRC_DIR = src/
 INC_DIR = include/
 
-SRCS = philo.c
+SRCS = philo.c		parse.c		init.c		utils.c		sim.c	philosopher.c	watcher.c	message.c
 OBJS = $(SRCS:.c=.o)
 OBJS_P = $(addprefix $(OBJ_DIR), $(OBJS))
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS += -Wall -Werror -Wextra -g -pthread
+
+ifeq ($(DEBUG), 1)
+CFLAGS += -DDEBUG
+endif
 
 all: $(NAME)
 
@@ -20,7 +24,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC_DIR)philo.h
 
 $(NAME): $(OBJS_P)
 	@echo "Compiling main executable"
-	@$(CC) $(CFLAGS) $(OBJS_P) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS_P) -lpthread -o $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)
