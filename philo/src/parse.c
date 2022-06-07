@@ -46,9 +46,12 @@ bool	parse_args(int argc, char **argv, uint32_t settings[5])
 			return (false);
 		++i;
 	}
-	if (settings[N_PHILO] < 1)
-		return (false);
 	if (argc != 6)
 		settings[N_EAT] = UINT32_MAX;
 	return (true);
+}
+
+bool	validate_philo_count(const uint32_t settings[5])
+{
+	return (settings[N_PHILO] > 1);
 }

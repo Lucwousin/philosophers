@@ -49,7 +49,7 @@ bool	init_mutexes(t_state *state)
 	}
 	if (pthread_mutex_init(&state->print_m, NULL) != 0 || \
 		pthread_mutex_init(&state->end_sim, NULL) != 0 || \
-        pthread_mutex_init(&state->run_sim, NULL) != 0)
+		pthread_mutex_init(&state->run_sim, NULL) != 0)
 		return (false);
 	pthread_mutex_lock(&state->end_sim);
 	pthread_mutex_lock(&state->run_sim);

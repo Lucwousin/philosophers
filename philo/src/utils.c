@@ -14,6 +14,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 uint64_t	get_time(void)
 {
@@ -38,4 +39,27 @@ void	*ft_calloc(size_t count, size_t size)
 	if (p)
 		memset(p, 0x00, total);
 	return (p);
+}
+
+void	smart_sleep(uint64_t duration)
+{
+	uint64_t	end_time;
+	uint64_t	cur_time;
+	uint64_t	dif_time;
+
+	end_time = get_time() + duration;
+	while (true)
+	{
+		cur_time = get_time();
+		if (cur_time >= end_time)
+			return ;
+		dif_time = end_time - cur_time;
+		if (dif_time <= 1)
+		{
+			while (get_time() < end_time)
+				usleep(100);
+			return ;
+		}
+		usleep((dif_time * 2 / 3) * 1000);
+	}
 }

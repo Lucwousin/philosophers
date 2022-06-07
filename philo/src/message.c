@@ -22,25 +22,23 @@ static const char	*g_msgs[] = {
 [DIE] = "died"
 };
 
-void	send_message(t_philo *philo, t_msg msg)
+void	print_message(t_philo *philo, t_msg msg)
 {
-	static bool	done = false;
 	uint64_t	timestamp;
-	t_mutex		*mutex;
 
-	mutex = &philo->state->print_m;
-	pthread_mutex_lock(mutex);
-	if (done)
+	pthread_mutex_lock(&philo->state->run_sim);
+	if (philo->state->stopped)
 	{
-		pthread_mutex_unlock(mutex);
-		pthread_exit((NULL));
+		pthread_mutex_unlock(&philo->state->run_sim);
+		return ;
 	}
+	pthread_mutex_unlock(&philo->state->run_sim);
+	pthread_mutex_lock(&philo->state->print_m);
 	timestamp = get_time() - philo->state->start_time;
 #ifdef DEBUG
 	printf("%" PRIu64 " %u %s\n", timestamp, philo->id + 1, g_msgs[msg]);
 #else
-	printf("%-8" PRIu64 "ms - %3u %s\n", timestamp, philo->id + 1, g_msgs[msg]);
+	printf("%8" PRIu64 "ms - %3u %s\n", timestamp, philo->id + 1, g_msgs[msg]);
 #endif
-	done = msg == DIE;
-	pthread_mutex_unlock(mutex);
+	pthread_mutex_unlock(&philo->state->print_m);
 }

@@ -12,7 +12,7 @@ CC = gcc
 CFLAGS += -Wall -Werror -Wextra -g -pthread
 
 ifeq ($(DEBUG), 1)
-CFLAGS += -DDEBUG
+CFLAGS += -DDEBUG -fsanitize=thread -O2
 endif
 
 all: $(NAME)
