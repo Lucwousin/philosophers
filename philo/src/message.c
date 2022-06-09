@@ -13,6 +13,11 @@
 #include "philo.h"
 #include <stdio.h>
 #include <inttypes.h>
+#ifdef DEBUG
+# define FORMAT_MSG "%llu %u %s\n"
+#else
+# define FORMAT_MSG "%8llums - %3u %s\n"
+#endif
 
 static const char	*g_msgs[] = {
 [FORK] = "has taken a fork",
@@ -28,10 +33,6 @@ void	print_message(t_philo *philo, t_msg msg)
 
 	pthread_mutex_lock(&philo->state->print_m);
 	timestamp = get_time() - philo->state->start_time;
-#ifndef DEBUG
-	printf("%" PRIu64 " %u %s\n", timestamp, philo->id + 1, g_msgs[msg]);
-#else
-	printf("%8" PRIu64 "ms - %3u %s\n", timestamp, philo->id + 1, g_msgs[msg]);
-#endif
+	printf(FORMAT_MSG, timestamp, philo->id + 1, g_msgs[msg]);
 	pthread_mutex_unlock(&philo->state->print_m);
 }

@@ -38,7 +38,7 @@ static bool	parse_arg(char *arg, uint32_t *setting)
 bool	parse_args(int argc, char **argv, uint32_t settings[5])
 {
 	int32_t	i;
-	
+
 	i = 0;
 	while (i < argc - 1)
 	{

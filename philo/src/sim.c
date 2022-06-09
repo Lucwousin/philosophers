@@ -23,12 +23,12 @@ static bool	create_threads(t_state *state)
 	philos = state->philos;
 	while (i < state->settings[N_PHILO])
 	{
-		if (pthread_create(&philos[i].thread, NULL, philo_thread, philos + i) != 0)
+		if (pthread_create(&philos[i].thread, NULL, philo_thread, philos + i))
 			return (false);
 		++i;
 		usleep(150);
 	}
-	if (pthread_create(&state->watcher, NULL, watch_thread, state) != 0)
+	if (pthread_create(&state->watcher, NULL, watch_thread, state))
 		return (false);
 	return (true);
 }
@@ -36,7 +36,7 @@ static bool	create_threads(t_state *state)
 static void	join_threads(t_state *state)
 {
 	uint32_t	i;
-	
+
 	i = 0;
 	while (i < state->settings[N_PHILO])
 	{

@@ -11,8 +11,11 @@ OBJS_P = $(addprefix $(OBJ_DIR), $(OBJS))
 CC = gcc
 CFLAGS += -Wall -Werror -Wextra -g -pthread
 
-ifeq ($(DEBUG), 1)
+ifeq ($(TSAN), 1)
 CFLAGS += -fsanitize=thread
+endif
+ifeq ($(DEBUG), 1)
+CFLAGS += -DDEBUG
 endif
 
 all: $(NAME)
