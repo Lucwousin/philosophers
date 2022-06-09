@@ -29,7 +29,6 @@ static void	cleanup(t_state *state)
 	if (state->forks)
 	{
 		pthread_mutex_destroy(&state->print_m);
-		pthread_mutex_destroy(&state->end_sim);
 		pthread_mutex_destroy(&state->run_sim);
 	}
 	free(state->forks);

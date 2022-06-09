@@ -42,6 +42,13 @@ typedef enum e_msg {
 	DIE
 }	t_msg;
 
+typedef enum e_status {
+	THINKING,
+	EATING,
+	SLEEPING,
+	NO_STATUS
+}	t_status;
+
 typedef struct s_state	t_state;
 
 typedef struct s_philo {
@@ -49,6 +56,7 @@ typedef struct s_philo {
 	pthread_t	thread;
 	uint64_t	last_eaten;
 	uint32_t	times_ate;
+	t_mutex		*forks[2];
 	t_mutex		eat_m;
 	t_state		*state;
 }	t_philo;
@@ -60,7 +68,6 @@ typedef struct s_state {
 	uint64_t	start_time;
 	t_mutex		print_m;
 	t_mutex		run_sim;
-	t_mutex		end_sim;
 	pthread_t	watcher;
 	bool		stopped;
 }	t_state;

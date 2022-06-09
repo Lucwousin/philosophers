@@ -14,16 +14,13 @@
 #include <unistd.h>
 #include <printf.h>
 
-static void	get_forks(t_mutex *forks[2], t_philo *philo)
-{
-	pthread_mutex_lock(forks[0]);
-	print_message(philo, FORK);
-	pthread_mutex_lock(forks[1]);
-	print_message(philo, FORK);
-}
 
-static void	eat(t_philo *philo)
+static void	go_eat(t_philo *philo)
 {
+	pthread_mutex_lock(philo->forks[0]);
+	print_message(philo, FORK);
+	pthread_mutex_lock(philo->forks[1]);
+	print_message(philo, FORK);
 	pthread_mutex_lock(&philo->eat_m);
 	print_message(philo, EAT);
 	philo->last_eaten = get_time();
@@ -32,13 +29,8 @@ static void	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->eat_m);
 	++philo->times_ate;
 	pthread_mutex_unlock(&philo->eat_m);
-}
-
-static void	*return_forks(t_mutex *forks[2])
-{
-	pthread_mutex_unlock(forks[0]);
-	pthread_mutex_unlock(forks[1]);
-	return ((void *) 0);
+	pthread_mutex_unlock(philo->forks[0]);
+	pthread_mutex_unlock(philo->forks[1]);
 }
 
 static void	go_sleep(t_philo *philo)
@@ -47,41 +39,42 @@ static void	go_sleep(t_philo *philo)
 	smart_sleep(philo->state->settings[T_SLEEP]);
 }
 
-static void	assign_forks(t_mutex *forks[2], uint32_t id, t_state *state)
+static void	philo_action(t_philo *philo, t_status status)
 {
-	uint32_t	l;
-	uint32_t	r;
+	if (status == THINKING)
+		print_message(philo, THINK);
+	else if (status == EATING)
+		go_eat(philo);
+	else if (status == SLEEPING)
+		go_sleep(philo);
+}
 
-	l = id;
-	r = (id + 1) % state->settings[N_PHILO];
-	forks[0] = state->forks + l;
-	forks[1] = state->forks + r;
+static bool	check_stopped(t_state *state)
+{
+	bool	result;
+
+	pthread_mutex_lock(&state->run_sim);
+	result = state->stopped;
+	pthread_mutex_unlock(&state->run_sim);
+	return (result);
 }
 
 void	*philo_thread(void *arg)
 {
-	t_philo	*philo;
-	t_mutex	*forks[2];
+	t_philo		*philo;
+	t_status	status;
 
 	philo = (t_philo *) arg;
-	assign_forks(forks, philo->id, philo->state);
+	status = THINKING;
 	pthread_mutex_lock(&philo->state->run_sim);
-	pthread_mutex_unlock(&philo->state->run_sim);
 	philo->last_eaten = philo->state->start_time;
-	if (philo->id % 2)
-		usleep(150);
-	while (true)
-	{
-		print_message(philo, THINK);
-		get_forks(forks, philo);
-		eat(philo);
-		return_forks(forks);
-		go_sleep(philo);
-		pthread_mutex_lock(&philo->state->run_sim);
-		if (philo->state->stopped)
-			break ;
-		pthread_mutex_unlock(&philo->state->run_sim);
-	}
 	pthread_mutex_unlock(&philo->state->run_sim);
+	if (philo->id % 2)
+		usleep(500);
+	while (check_stopped(philo->state) == false)
+	{
+		philo_action(philo, status);
+		status = (status + 1) % NO_STATUS;
+	}
 	return (NULL);
 }

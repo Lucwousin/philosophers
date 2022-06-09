@@ -13,8 +13,8 @@
 #include "philo.h"
 #include <sys/time.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <libc.h>
 
 uint64_t	get_time(void)
 {
@@ -60,6 +60,6 @@ void	smart_sleep(uint64_t duration)
 				usleep(100);
 			return ;
 		}
-		usleep((dif_time * 2 / 3) * 1000);
+		usleep((dif_time * 2 * 1000) / 3);
 	}
 }

@@ -13,9 +13,9 @@
 #include <unistd.h>
 #include "philo.h"
 
-static bool	check_death(t_philo *philo, uint64_t time)
+static bool	check_death(t_philo *philo)
 {
-	if (time - philo->last_eaten <= philo->state->settings[T_DIE])
+	if (get_time() - philo->last_eaten <= philo->state->settings[T_DIE])
 		return (false);
 	print_message(philo, DIE);
 	pthread_mutex_unlock(&philo->eat_m);
@@ -27,7 +27,6 @@ static bool	check_philos(t_state *state)
 	t_philo		*philo;
 	uint32_t	i;
 	uint32_t	fed_count;
-	uint64_t	cur_time;
 
 	i = 0;
 	fed_count = 0;
@@ -35,8 +34,7 @@ static bool	check_philos(t_state *state)
 	{
 		philo = state->philos + i;
 		pthread_mutex_lock(&philo->eat_m);
-		cur_time = get_time();
-		if (check_death(philo, cur_time))
+		if (check_death(philo))
 			return (true);
 		if (state->settings[N_EAT] != UINT32_MAX && \
 			philo->times_ate >= state->settings[N_EAT])
@@ -54,7 +52,7 @@ void	*watch_thread(void *arg)
 	state = (t_state *) arg;
 	pthread_mutex_lock(&state->run_sim);
 	pthread_mutex_unlock(&state->run_sim);
-	usleep(state->settings[T_DIE] / 2 * 1000);
+	usleep(state->settings[T_DIE] * 1000 / 2);
 	while (true)
 	{
 		if (check_philos(state))
@@ -62,9 +60,8 @@ void	*watch_thread(void *arg)
 			pthread_mutex_lock(&state->run_sim);
 			state->stopped = true;
 			pthread_mutex_unlock(&state->run_sim);
-			pthread_mutex_unlock(&state->end_sim);
 			return (NULL);
 		}
-		usleep(1000);
+		usleep(750);
 	}
 }

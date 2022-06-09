@@ -19,6 +19,8 @@ static bool	create_philosopher(t_philo *p, t_state *state, uint32_t id)
 	p->state = state;
 	if (pthread_mutex_init(&p->eat_m, NULL) != 0)
 		return (false);
+	p->forks[0] = state->forks + p->id;
+	p->forks[1] = state->forks + ((p->id + 1) % state->settings[N_PHILO]);
 	return (true);
 }
 
@@ -48,11 +50,8 @@ bool	init_mutexes(t_state *state)
 		++i;
 	}
 	if (pthread_mutex_init(&state->print_m, NULL) != 0 || \
-		pthread_mutex_init(&state->end_sim, NULL) != 0 || \
 		pthread_mutex_init(&state->run_sim, NULL) != 0)
 		return (false);
-	pthread_mutex_lock(&state->end_sim);
-	pthread_mutex_lock(&state->run_sim);
 	return (true);
 }
 
