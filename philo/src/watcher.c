@@ -13,10 +13,18 @@
 #include <unistd.h>
 #include "philo.h"
 
+static void	set_stopped(t_state *state)
+{
+	pthread_mutex_lock(&state->run_sim);
+	state->stopped = true;
+	pthread_mutex_unlock(&state->run_sim);
+}
+
 static bool	check_death(t_philo *philo)
 {
 	if (get_time() - philo->last_eaten <= philo->state->settings[T_DIE])
 		return (false);
+	set_stopped(philo->state);
 	print_message(philo, DIE);
 	pthread_mutex_unlock(&philo->eat_m);
 	return (true);
@@ -42,7 +50,10 @@ static bool	check_philos(t_state *state)
 		pthread_mutex_unlock(&philo->eat_m);
 		++i;
 	}
-	return (fed_count == state->settings[N_PHILO]);
+	if (fed_count != state->settings[N_PHILO])
+		return (false);
+	set_stopped(state);
+	return (true);
 }
 
 void	*watch_thread(void *arg)
@@ -56,12 +67,7 @@ void	*watch_thread(void *arg)
 	while (true)
 	{
 		if (check_philos(state))
-		{
-			pthread_mutex_lock(&state->run_sim);
-			state->stopped = true;
-			pthread_mutex_unlock(&state->run_sim);
 			return (NULL);
-		}
 		usleep(750);
 	}
 }

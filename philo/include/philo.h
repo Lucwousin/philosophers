@@ -87,5 +87,6 @@ void		print_message(t_philo *philo, t_msg msg);
 uint64_t	get_time(void);
 void		smart_sleep(uint64_t duration);
 void		*ft_calloc(size_t count, size_t size);
+bool		check_stopped(t_state *state);
 
 #endif

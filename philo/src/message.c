@@ -26,13 +26,6 @@ void	print_message(t_philo *philo, t_msg msg)
 {
 	uint64_t	timestamp;
 
-	pthread_mutex_lock(&philo->state->run_sim);
-	if (philo->state->stopped)
-	{
-		pthread_mutex_unlock(&philo->state->run_sim);
-		return ;
-	}
-	pthread_mutex_unlock(&philo->state->run_sim);
 	pthread_mutex_lock(&philo->state->print_m);
 	timestamp = get_time() - philo->state->start_time;
 #ifndef DEBUG
