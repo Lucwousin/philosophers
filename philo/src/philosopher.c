@@ -15,8 +15,6 @@
 
 static void	try_message(t_philo *philo, t_msg msg)
 {
-	if (check_stopped(philo->state))
-		return ;
 	print_message(philo, msg);
 }
 
@@ -48,15 +46,17 @@ void	*philo_thread(void *arg)
 {
 	t_philo		*philo;
 	t_status	status;
+	bool		running;
 
 	philo = (t_philo *) arg;
 	status = THINKING;
+	running = true;
 	pthread_mutex_lock(&philo->state->run_sim);
 	philo->last_eaten = philo->state->start_time;
 	pthread_mutex_unlock(&philo->state->run_sim);
 	if (philo->id % 2)
-		usleep(500);
-	while (check_stopped(philo->state) == false)
+		usleep(1000);
+	while (running)
 	{
 		if (status == THINKING)
 			try_message(philo, THINK);
@@ -65,6 +65,7 @@ void	*philo_thread(void *arg)
 		else if (status == SLEEPING)
 			go_sleep(philo);
 		status = (status + 1) % NO_STATUS;
+		running = (check_stopped(philo->state) == false);
 	}
 	return (NULL);
 }

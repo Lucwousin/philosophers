@@ -27,12 +27,25 @@ static const char	*g_msgs[] = {
 [DIE] = "died"
 };
 
+static bool	should_print(t_state *state, t_msg msg)
+{
+	if (msg == DIE)
+		return (true);
+	else
+		return (check_stopped(state) == false);
+}
+
 void	print_message(t_philo *philo, t_msg msg)
 {
 	uint64_t	timestamp;
+	bool		print;
 
 	pthread_mutex_lock(&philo->state->print_m);
-	timestamp = get_time() - philo->state->start_time;
-	printf(FORMAT_MSG, timestamp, philo->id + 1, g_msgs[msg]);
+	print = should_print(philo->state, msg);
+	if (print)
+	{
+		timestamp = get_time() - philo->state->start_time;
+		printf(FORMAT_MSG, timestamp, philo->id + 1, g_msgs[msg]);
+	}
 	pthread_mutex_unlock(&philo->state->print_m);
 }

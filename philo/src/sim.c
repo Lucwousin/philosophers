@@ -26,7 +26,7 @@ static bool	create_threads(t_state *state)
 		if (pthread_create(&philos[i].thread, NULL, philo_thread, philos + i))
 			return (false);
 		++i;
-		usleep(150);
+		usleep(500);
 	}
 	if (pthread_create(&state->watcher, NULL, watch_thread, state))
 		return (false);

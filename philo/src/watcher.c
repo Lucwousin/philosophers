@@ -68,6 +68,6 @@ void	*watch_thread(void *arg)
 	{
 		if (check_philos(state))
 			return (NULL);
-		usleep(750);
+		usleep(1000);
 	}
 }
