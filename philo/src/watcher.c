@@ -22,11 +22,14 @@ static void	set_stopped(t_state *state)
 
 static bool	check_death(t_philo *philo)
 {
-	if (get_time() - philo->last_eaten <= philo->state->settings[T_DIE])
+	uint64_t	time;
+
+	time = get_time();
+	if (time - philo->last_eaten <= philo->state->settings[T_DIE])
 		return (false);
-	set_stopped(philo->state);
-	print_message(philo, DIE);
+	queue_message(philo, DIE, time - philo->state->start_time);
 	pthread_mutex_unlock(&philo->eat_m);
+	set_stopped(philo->state);
 	return (true);
 }
 
@@ -52,6 +55,7 @@ static bool	check_philos(t_state *state)
 	}
 	if (fed_count != state->settings[N_PHILO])
 		return (false);
+	queue_message(philo, END, get_time() - state->start_time);
 	set_stopped(state);
 	return (true);
 }

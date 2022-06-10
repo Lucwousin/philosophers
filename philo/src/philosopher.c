@@ -13,19 +13,14 @@
 #include "philo.h"
 #include <unistd.h>
 
-static void	try_message(t_philo *philo, t_msg msg)
-{
-	print_message(philo, msg);
-}
-
 static void	go_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->forks[0]);
-	try_message(philo, FORK);
+	queue_message(philo, FORK, get_time() - philo->state->start_time);
 	pthread_mutex_lock(philo->forks[1]);
-	try_message(philo, FORK);
+	queue_message(philo, FORK, get_time() - philo->state->start_time);
 	pthread_mutex_lock(&philo->eat_m);
-	try_message(philo, EAT);
+	queue_message(philo, EAT, get_time() - philo->state->start_time);
 	philo->last_eaten = get_time();
 	pthread_mutex_unlock(&philo->eat_m);
 	smart_sleep(philo->state->settings[T_EAT]);
@@ -38,7 +33,7 @@ static void	go_eat(t_philo *philo)
 
 static void	go_sleep(t_philo *philo)
 {
-	try_message(philo, SLEEP);
+	queue_message(philo, SLEEP, get_time() - philo->state->start_time);
 	smart_sleep(philo->state->settings[T_SLEEP]);
 }
 
@@ -59,7 +54,7 @@ void	*philo_thread(void *arg)
 	while (running)
 	{
 		if (status == THINKING)
-			try_message(philo, THINK);
+			queue_message(philo, THINK, get_time() - philo->state->start_time);
 		else if (status == EATING)
 			go_eat(philo);
 		else if (status == SLEEPING)

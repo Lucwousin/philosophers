@@ -49,7 +49,7 @@ bool	init_mutexes(t_state *state)
 			return (false);
 		++i;
 	}
-	if (pthread_mutex_init(&state->print_m, NULL) != 0 || \
+	if (pthread_mutex_init(&state->msg_queue.msg_mutex, NULL) != 0 || \
 		pthread_mutex_init(&state->run_sim, NULL) != 0)
 		return (false);
 	return (true);
@@ -57,7 +57,15 @@ bool	init_mutexes(t_state *state)
 
 bool	allocate_arrays(t_state *state)
 {
-	state->philos = ft_calloc(state->settings[N_PHILO], sizeof(t_philo));
-	state->forks = ft_calloc(state->settings[N_PHILO], sizeof(t_mutex));
-	return (state->philos != NULL && state->forks != NULL);
+	uint32_t	num_philos;
+
+	num_philos = state->settings[N_PHILO];
+	state->philos = ft_calloc(num_philos, sizeof(t_philo));
+	state->forks = ft_calloc(num_philos, sizeof(t_mutex));
+	state->msg_queue.msgs = ft_calloc(num_philos * 4, sizeof(t_msg));
+	state->msg_queue.ids = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	state->msg_queue.timestamps = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	return (state->philos != NULL && state->forks != NULL
+		&& state->msg_queue.msgs != NULL && state->msg_queue.ids != NULL
+		&& state->msg_queue.timestamps != NULL);
 }

@@ -39,7 +39,8 @@ typedef enum e_msg {
 	EAT,
 	SLEEP,
 	THINK,
-	DIE
+	DIE,
+	END
 }	t_msg;
 
 typedef enum e_status {
@@ -61,14 +62,23 @@ typedef struct s_philo {
 	t_state		*state;
 }	t_philo;
 
+typedef struct s_msg_queue {
+	uint32_t	count;
+	uint32_t	*ids;
+	uint32_t	*timestamps;
+	t_msg		*msgs;
+	t_mutex		msg_mutex;
+}	t_msg_queue;
+
 typedef struct s_state {
 	uint32_t	settings[5];
 	t_philo		*philos;
 	t_mutex		*forks;
 	uint64_t	start_time;
-	t_mutex		print_m;
 	t_mutex		run_sim;
 	pthread_t	watcher;
+	pthread_t	printer;
+	t_msg_queue	msg_queue;
 	bool		stopped;
 }	t_state;
 
@@ -82,11 +92,13 @@ bool		simulate(t_state *state);
 void		*philo_thread(void *arg);
 void		*watch_thread(void *arg);
 
-void		print_message(t_philo *philo, t_msg msg);
+void		*listen_messages(void *arg);
+void		queue_message(t_philo *philo, t_msg msg, uint32_t timestamp);
 
 uint64_t	get_time(void);
 void		smart_sleep(uint64_t duration);
 void		*ft_calloc(size_t count, size_t size);
+void		*ft_memcpy(void *dst, const void *src, size_t len);
 bool		check_stopped(t_state *state);
 
 #endif

@@ -28,7 +28,8 @@ static bool	create_threads(t_state *state)
 		++i;
 		usleep(500);
 	}
-	if (pthread_create(&state->watcher, NULL, watch_thread, state))
+	if (pthread_create(&state->watcher, NULL, watch_thread, state) || \
+		pthread_create(&state->printer, NULL, listen_messages, state))
 		return (false);
 	return (true);
 }
@@ -44,6 +45,7 @@ static void	join_threads(t_state *state)
 		++i;
 	}
 	pthread_join(state->watcher, NULL);
+	pthread_join(state->printer, NULL);
 }
 
 bool	simulate(t_state *state)

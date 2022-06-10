@@ -28,11 +28,14 @@ static void	cleanup(t_state *state)
 	}
 	if (state->forks)
 	{
-		pthread_mutex_destroy(&state->print_m);
+		pthread_mutex_destroy(&state->msg_queue.msg_mutex);
 		pthread_mutex_destroy(&state->run_sim);
 	}
 	free(state->forks);
 	free(state->philos);
+	free(state->msg_queue.ids);
+	free(state->msg_queue.msgs);
+	free(state->msg_queue.timestamps);
 }
 
 static int	exit_msg(t_state *state, const char *msg)
