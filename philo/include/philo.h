@@ -84,7 +84,7 @@ typedef struct s_state {
 
 bool		parse_args(int argc, char **argv, uint32_t settings[5]);
 bool		validate_philo_count(const uint32_t settings[5]);
-bool		allocate_arrays(t_state *state);
+bool		init_allocated_memory(t_state *state);
 bool		init_philosophers(t_state *state);
 bool		init_mutexes(t_state *state);
 

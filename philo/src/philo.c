@@ -56,7 +56,7 @@ int	main(int argc, char **argv)
 		return (exit_msg(NULL, ARGS_MES));
 	if (!validate_philo_count(state.settings))
 		return (exit_msg(NULL, PHILO_N_MES));
-	if (!allocate_arrays(&state))
+	if (!init_allocated_memory(&state))
 		return (exit_msg(&state, ALLOC_MES));
 	if (!init_mutexes(&state))
 		return (exit_msg(&state, MUTEX_MES));

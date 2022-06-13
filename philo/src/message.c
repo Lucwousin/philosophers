@@ -83,9 +83,6 @@ void	*listen_messages(void *arg)
 	state = arg;
 	queue = &state->msg_queue;
 	memset(&copy, 0, sizeof(t_msg_queue));
-	pthread_mutex_lock(&queue->msg_mutex);
-	queue->count = 0;
-	pthread_mutex_unlock(&queue->msg_mutex);
 	while (true)
 	{
 		pthread_mutex_lock(&queue->msg_mutex);
