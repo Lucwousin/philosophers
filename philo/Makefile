@@ -4,7 +4,15 @@ OBJ_DIR = obj/
 SRC_DIR = src/
 INC_DIR = include/
 
-SRCS = philo.c		parse.c		init.c		utils.c		sim.c	philosopher.c	watcher.c	message.c
+SRCS =	philo.c														\
+		parse.c														\
+		init.c														\
+		utils.c														\
+		sim.c														\
+		philosopher.c												\
+		watcher.c													\
+		message.c
+
 OBJS = $(SRCS:.c=.o)
 OBJS_P = $(addprefix $(OBJ_DIR), $(OBJS))
 
