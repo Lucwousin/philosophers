@@ -52,19 +52,22 @@ static bool	print_queue(t_state *state, t_msg_queue *queue)
 
 static bool	copy_queue(t_msg_queue *queue, t_msg_queue *copy)
 {
-	copy->count = queue->count;
-	free(copy->ids);
-	free(copy->msgs);
-	free(copy->times);
-	copy->ids = malloc(queue->count * sizeof(uint32_t));
-	copy->msgs = malloc(queue->count * sizeof(t_msg));
-	copy->times = malloc(queue->count * sizeof(uint32_t));
-	if (copy->ids == NULL || copy->msgs == NULL || copy->times == NULL)
+	if (copy->count < queue->count)
 	{
-		printf("Failed to allocate messages! Message printer will exit\n");
-		pthread_mutex_unlock(&queue->msg_mutex);
-		return (false);
+		free(copy->ids);
+		free(copy->msgs);
+		free(copy->times);
+		copy->ids = malloc(queue->count * sizeof(uint32_t));
+		copy->msgs = malloc(queue->count * sizeof(t_msg));
+		copy->times = malloc(queue->count * sizeof(uint32_t));
+		if (copy->ids == NULL || copy->msgs == NULL || copy->times == NULL)
+		{
+			printf("Failed to allocate messages! Message printer will exit\n");
+			pthread_mutex_unlock(&queue->msg_mutex);
+			return (false);
+		}
 	}
+	copy->count = queue->count;
 	ft_memcpy(copy->ids, queue->ids, queue->count * sizeof(uint32_t));
 	ft_memcpy(copy->msgs, queue->msgs, queue->count * sizeof(t_msg));
 	ft_memcpy(copy->times, queue->times, queue->count * sizeof(uint32_t));
