@@ -18,7 +18,7 @@
 
 # define USAGE_MES "Usage: ./philo <n philo> <t die> <t eat> <t sleep> <n eat>"
 # define ARGS_MES "All arguments should fit in a 32 bit unsigned int"
-# define PHILO_N_MES "There should be more than one philo_thread"
+# define PHILO_N_MES "There should be more than one philosopher!"
 # define ALLOC_MES "Failed to allocate memory for forks or philosophers"
 # define MUTEX_MES "Failed to initialize mutexes"
 # define PHILO_MES "Failed to initialize philo mutexes"
