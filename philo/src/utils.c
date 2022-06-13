@@ -83,12 +83,12 @@ void	smart_sleep(uint64_t duration)
 	}
 }
 
-bool	check_stopped(t_state *state)
+bool	check_stopped(t_sim *sim)
 {
 	bool	result;
 
-	pthread_mutex_lock(&state->run_sim);
-	result = state->stopped;
-	pthread_mutex_unlock(&state->run_sim);
+	pthread_mutex_lock(&sim->run_sim);
+	result = sim->stopped;
+	pthread_mutex_unlock(&sim->run_sim);
 	return (result);
 }

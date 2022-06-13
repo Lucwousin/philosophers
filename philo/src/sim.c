@@ -13,49 +13,49 @@
 #include <unistd.h>
 #include "philo.h"
 
-static bool	create_threads(t_state *state)
+static bool	create_threads(t_sim *sim)
 {
 	uint32_t	i;
 	t_philo		*philos;
 
 	i = 0;
-	philos = state->philos;
-	while (i < state->settings[N_PHILO])
+	philos = sim->philos;
+	while (i < sim->settings[N_PHILO])
 	{
 		if (pthread_create(&philos[i].thread, NULL, philo_thread, philos + i))
 			return (false);
 		++i;
 		usleep(500);
 	}
-	if (pthread_create(&state->watcher, NULL, watch_thread, state) || \
-		pthread_create(&state->printer, NULL, listen_messages, state))
+	if (pthread_create(&sim->watcher, NULL, watch_thread, sim) || \
+		pthread_create(&sim->printer, NULL, listen_messages, sim))
 		return (false);
 	return (true);
 }
 
-static void	join_threads(t_state *state)
+static void	join_threads(t_sim *sim)
 {
 	uint32_t	i;
 
 	i = 0;
-	while (i < state->settings[N_PHILO])
+	while (i < sim->settings[N_PHILO])
 	{
-		pthread_join(state->philos[i].thread, NULL);
+		pthread_join(sim->philos[i].thread, NULL);
 		++i;
 	}
-	pthread_join(state->watcher, NULL);
-	pthread_join(state->printer, NULL);
+	pthread_join(sim->watcher, NULL);
+	pthread_join(sim->printer, NULL);
 }
 
-bool	simulate(t_state *state)
+bool	simulate(t_sim *sim)
 {
-	state->stopped = false;
-	pthread_mutex_lock(&state->run_sim);
-	if (!create_threads(state))
+	sim->stopped = false;
+	pthread_mutex_lock(&sim->run_sim);
+	if (!create_threads(sim))
 		return (false);
 	usleep(1000);
-	state->start_time = get_time();
-	pthread_mutex_unlock(&state->run_sim);
-	join_threads(state);
+	sim->start_time = get_time();
+	pthread_mutex_unlock(&sim->run_sim);
+	join_threads(sim);
 	return (true);
 }

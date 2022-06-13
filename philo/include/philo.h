@@ -50,7 +50,7 @@ typedef enum e_status {
 	NO_STATUS
 }	t_status;
 
-typedef struct s_state	t_state;
+typedef struct s_simulation	t_sim;
 
 typedef struct s_philo {
 	uint32_t	id;
@@ -59,7 +59,7 @@ typedef struct s_philo {
 	uint32_t	times_ate;
 	t_mutex		*forks[2];
 	t_mutex		eat_m;
-	t_state		*state;
+	t_sim		*sim;
 }	t_philo;
 
 typedef struct s_msg_queue {
@@ -70,7 +70,7 @@ typedef struct s_msg_queue {
 	t_mutex		msg_mutex;
 }	t_msg_queue;
 
-typedef struct s_state {
+typedef struct s_simulation {
 	uint32_t	settings[5];
 	t_philo		*philos;
 	t_mutex		*forks;
@@ -80,15 +80,15 @@ typedef struct s_state {
 	pthread_t	printer;
 	t_msg_queue	msg_queue;
 	bool		stopped;
-}	t_state;
+}	t_sim;
 
 bool		parse_args(int argc, char **argv, uint32_t settings[5]);
 bool		validate_philo_count(const uint32_t settings[5]);
-bool		init_allocated_memory(t_state *state);
-bool		init_philosophers(t_state *state);
-bool		init_mutexes(t_state *state);
+bool		init_allocated_memory(t_sim *sim);
+bool		init_philosophers(t_sim *sim);
+bool		init_mutexes(t_sim *sim);
 
-bool		simulate(t_state *state);
+bool		simulate(t_sim *sim);
 void		*philo_thread(void *arg);
 void		*watch_thread(void *arg);
 
@@ -99,6 +99,6 @@ uint64_t	get_time(void);
 void		smart_sleep(uint64_t duration);
 void		*ft_calloc(size_t count, size_t size);
 void		*ft_memcpy(void *dst, const void *src, size_t len);
-bool		check_stopped(t_state *state);
+bool		check_stopped(t_sim *sim);
 
 #endif

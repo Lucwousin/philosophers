@@ -13,11 +13,11 @@
 #include <unistd.h>
 #include "philo.h"
 
-static void	set_stopped(t_state *state)
+static void	set_stopped(t_sim *sim)
 {
-	pthread_mutex_lock(&state->run_sim);
-	state->stopped = true;
-	pthread_mutex_unlock(&state->run_sim);
+	pthread_mutex_lock(&sim->run_sim);
+	sim->stopped = true;
+	pthread_mutex_unlock(&sim->run_sim);
 }
 
 static bool	check_death(t_philo *philo)
@@ -25,15 +25,15 @@ static bool	check_death(t_philo *philo)
 	uint64_t	time;
 
 	time = get_time();
-	if (time - philo->last_eaten <= philo->state->settings[T_DIE])
+	if (time - philo->last_eaten <= philo->sim->settings[T_DIE])
 		return (false);
-	queue_message(philo, DIE, time - philo->state->start_time);
+	queue_message(philo, DIE, time - philo->sim->start_time);
 	pthread_mutex_unlock(&philo->eat_m);
-	set_stopped(philo->state);
+	set_stopped(philo->sim);
 	return (true);
 }
 
-static bool	check_philos(t_state *state)
+static bool	check_philos(t_sim *sim)
 {
 	t_philo		*philo;
 	uint32_t	i;
@@ -41,36 +41,36 @@ static bool	check_philos(t_state *state)
 
 	i = 0;
 	fed_count = 0;
-	while (i < state->settings[N_PHILO])
+	while (i < sim->settings[N_PHILO])
 	{
-		philo = state->philos + i;
+		philo = sim->philos + i;
 		pthread_mutex_lock(&philo->eat_m);
 		if (check_death(philo))
 			return (true);
-		if (state->settings[N_EAT] != UINT32_MAX && \
-			philo->times_ate >= state->settings[N_EAT])
+		if (sim->settings[N_EAT] != UINT32_MAX && \
+			philo->times_ate >= sim->settings[N_EAT])
 			++fed_count;
 		pthread_mutex_unlock(&philo->eat_m);
 		++i;
 	}
-	if (fed_count != state->settings[N_PHILO])
+	if (fed_count != sim->settings[N_PHILO])
 		return (false);
-	queue_message(philo, END, get_time() - state->start_time);
-	set_stopped(state);
+	queue_message(philo, END, get_time() - sim->start_time);
+	set_stopped(sim);
 	return (true);
 }
 
 void	*watch_thread(void *arg)
 {
-	t_state	*state;
+	t_sim	*sim;
 
-	state = (t_state *) arg;
-	pthread_mutex_lock(&state->run_sim);
-	pthread_mutex_unlock(&state->run_sim);
-	usleep(state->settings[T_DIE] * 1000 / 2);
+	sim = (t_sim *) arg;
+	pthread_mutex_lock(&sim->run_sim);
+	pthread_mutex_unlock(&sim->run_sim);
+	usleep(sim->settings[T_DIE] * 1000 / 2);
 	while (true)
 	{
-		if (check_philos(state))
+		if (check_philos(sim))
 			return (NULL);
 		usleep(1000);
 	}

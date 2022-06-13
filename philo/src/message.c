@@ -31,7 +31,7 @@ static const char	*g_msgs[] = {
 [END] = "philosophers ate enough - simulation ended"
 };
 
-static bool	print_queue(t_state *state, t_msg_queue *queue)
+static bool	print_queue(t_sim *sim, t_msg_queue *queue)
 {
 	uint32_t	i;
 	t_philo		*philo;
@@ -40,7 +40,7 @@ static bool	print_queue(t_state *state, t_msg_queue *queue)
 	i = 0;
 	while (i < queue->count)
 	{
-		philo = state->philos + queue->ids[i];
+		philo = sim->philos + queue->ids[i];
 		msg = queue->msgs[i];
 		printf(FORMAT_MSG, queue->times[i], philo->id + 1, g_msgs[msg]);
 		if (msg == DIE || msg == END)
@@ -76,12 +76,12 @@ static bool	copy_queue(t_msg_queue *queue, t_msg_queue *copy)
 
 void	*listen_messages(void *arg)
 {
-	t_state		*state;
+	t_sim		*sim;
 	t_msg_queue	*queue;
 	t_msg_queue	copy;
 
-	state = arg;
-	queue = &state->msg_queue;
+	sim = arg;
+	queue = &sim->msg_queue;
 	memset(&copy, 0, sizeof(t_msg_queue));
 	while (true)
 	{
@@ -90,7 +90,7 @@ void	*listen_messages(void *arg)
 			break ;
 		queue->count = 0;
 		pthread_mutex_unlock(&queue->msg_mutex);
-		if (!print_queue(state, &copy))
+		if (!print_queue(sim, &copy))
 			break ;
 		usleep(500);
 	}
@@ -104,9 +104,9 @@ void	queue_message(t_philo *philo, t_msg msg, uint32_t timestamp)
 {
 	t_msg_queue	*queue;
 
-	queue = &philo->state->msg_queue;
+	queue = &philo->sim->msg_queue;
 	pthread_mutex_lock(&queue->msg_mutex);
-	if (queue->count == philo->state->settings[N_PHILO] * 4)
+	if (queue->count == philo->sim->settings[N_PHILO] * 4)
 	{
 		printf("Unable to queue message, queue is full!\n");
 		pthread_mutex_unlock(&queue->msg_mutex);

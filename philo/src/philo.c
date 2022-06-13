@@ -13,57 +13,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void	cleanup(t_state *state)
+static void	cleanup(t_sim *sim)
 {
 	uint32_t	i;
 
 	i = 0;
-	while (i < state->settings[N_PHILO])
+	while (i < sim->settings[N_PHILO])
 	{
-		if (state->forks)
-			pthread_mutex_destroy(state->forks + i);
-		if (state->philos)
-			pthread_mutex_destroy(&state->philos[i].eat_m);
+		if (sim->forks)
+			pthread_mutex_destroy(sim->forks + i);
+		if (sim->philos)
+			pthread_mutex_destroy(&sim->philos[i].eat_m);
 		++i;
 	}
-	if (state->forks)
+	if (sim->forks)
 	{
-		pthread_mutex_destroy(&state->msg_queue.msg_mutex);
-		pthread_mutex_destroy(&state->run_sim);
+		pthread_mutex_destroy(&sim->msg_queue.msg_mutex);
+		pthread_mutex_destroy(&sim->run_sim);
 	}
-	free(state->forks);
-	free(state->philos);
-	free(state->msg_queue.ids);
-	free(state->msg_queue.msgs);
-	free(state->msg_queue.times);
+	free(sim->forks);
+	free(sim->philos);
+	free(sim->msg_queue.ids);
+	free(sim->msg_queue.msgs);
+	free(sim->msg_queue.times);
 }
 
-static int	exit_msg(t_state *state, const char *msg)
+static int	exit_msg(t_sim *sim, const char *msg)
 {
-	if (state != NULL)
-		cleanup(state);
+	if (sim != NULL)
+		cleanup(sim);
 	printf("Error: %s\n", msg);
 	return (EXIT_FAILURE);
 }
 
 int	main(int argc, char **argv)
 {
-	t_state	state;
+	t_sim	sim;
 
 	if (argc < 5 || argc > 6)
 		return (exit_msg(NULL, USAGE_MES));
-	if (!parse_args(argc, argv, state.settings))
+	if (!parse_args(argc, argv, sim.settings))
 		return (exit_msg(NULL, ARGS_MES));
-	if (!validate_philo_count(state.settings))
+	if (!validate_philo_count(sim.settings))
 		return (exit_msg(NULL, PHILO_N_MES));
-	if (!init_allocated_memory(&state))
-		return (exit_msg(&state, ALLOC_MES));
-	if (!init_mutexes(&state))
-		return (exit_msg(&state, MUTEX_MES));
-	if (!init_philosophers(&state))
-		return (exit_msg(&state, PHILO_MES));
-	if (!simulate(&state))
-		return (exit_msg(&state, THREAD_MES));
-	cleanup(&state);
+	if (!init_allocated_memory(&sim))
+		return (exit_msg(&sim, ALLOC_MES));
+	if (!init_mutexes(&sim))
+		return (exit_msg(&sim, MUTEX_MES));
+	if (!init_philosophers(&sim))
+		return (exit_msg(&sim, PHILO_MES));
+	if (!simulate(&sim))
+		return (exit_msg(&sim, THREAD_MES));
+	cleanup(&sim);
 	exit(EXIT_SUCCESS);
 }

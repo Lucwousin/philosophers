@@ -16,14 +16,14 @@
 static void	go_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->forks[0]);
-	queue_message(philo, FORK, get_time() - philo->state->start_time);
+	queue_message(philo, FORK, get_time() - philo->sim->start_time);
 	pthread_mutex_lock(philo->forks[1]);
-	queue_message(philo, FORK, get_time() - philo->state->start_time);
+	queue_message(philo, FORK, get_time() - philo->sim->start_time);
 	pthread_mutex_lock(&philo->eat_m);
-	queue_message(philo, EAT, get_time() - philo->state->start_time);
+	queue_message(philo, EAT, get_time() - philo->sim->start_time);
 	philo->last_eaten = get_time();
 	pthread_mutex_unlock(&philo->eat_m);
-	smart_sleep(philo->state->settings[T_EAT]);
+	smart_sleep(philo->sim->settings[T_EAT]);
 	pthread_mutex_lock(&philo->eat_m);
 	++philo->times_ate;
 	pthread_mutex_unlock(&philo->eat_m);
@@ -33,8 +33,8 @@ static void	go_eat(t_philo *philo)
 
 static void	go_sleep(t_philo *philo)
 {
-	queue_message(philo, SLEEP, get_time() - philo->state->start_time);
-	smart_sleep(philo->state->settings[T_SLEEP]);
+	queue_message(philo, SLEEP, get_time() - philo->sim->start_time);
+	smart_sleep(philo->sim->settings[T_SLEEP]);
 }
 
 void	*philo_thread(void *arg)
@@ -46,21 +46,21 @@ void	*philo_thread(void *arg)
 	philo = (t_philo *) arg;
 	status = THINKING;
 	running = true;
-	pthread_mutex_lock(&philo->state->run_sim);
-	philo->last_eaten = philo->state->start_time;
-	pthread_mutex_unlock(&philo->state->run_sim);
+	pthread_mutex_lock(&philo->sim->run_sim);
+	philo->last_eaten = philo->sim->start_time;
+	pthread_mutex_unlock(&philo->sim->run_sim);
 	if (philo->id % 2)
 		usleep(1000);
 	while (running)
 	{
 		if (status == THINKING)
-			queue_message(philo, THINK, get_time() - philo->state->start_time);
+			queue_message(philo, THINK, get_time() - philo->sim->start_time);
 		else if (status == EATING)
 			go_eat(philo);
 		else if (status == SLEEPING)
 			go_sleep(philo);
 		status = (status + 1) % NO_STATUS;
-		running = (check_stopped(philo->state) == false);
+		running = (check_stopped(philo->sim) == false);
 	}
 	return (NULL);
 }
