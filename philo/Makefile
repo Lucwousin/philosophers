@@ -35,7 +35,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC_DIR)philo.h
 
 $(NAME): $(OBJS_P)
 	@echo "Compiling main executable"
-	@$(CC) $(CFLAGS) $(OBJS_P) -lpthread -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS_P) -o $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)
