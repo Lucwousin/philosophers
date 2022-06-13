@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <unistd.h>
 #include "philo.h"
 
@@ -54,6 +53,7 @@ bool	simulate(t_state *state)
 	pthread_mutex_lock(&state->run_sim);
 	if (!create_threads(state))
 		return (false);
+	usleep(1000);
 	state->start_time = get_time();
 	pthread_mutex_unlock(&state->run_sim);
 	join_threads(state);
