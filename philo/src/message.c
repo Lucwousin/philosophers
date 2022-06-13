@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <libc.h>
+#include <string.h>
 
 #ifdef DEBUG
 # define FORMAT_MSG "%u %u %s\n"
@@ -42,7 +42,7 @@ static bool	print_queue(t_state *state, t_msg_queue *queue)
 	{
 		philo = state->philos + queue->ids[i];
 		msg = queue->msgs[i];
-		printf(FORMAT_MSG, queue->timestamps[i], philo->id + 1, g_msgs[msg]);
+		printf(FORMAT_MSG, queue->times[i], philo->id + 1, g_msgs[msg]);
 		if (msg == DIE || msg == END)
 			return (false);
 		++i;
@@ -55,11 +55,11 @@ static bool	copy_queue(t_msg_queue *queue, t_msg_queue *copy)
 	copy->count = queue->count;
 	free(copy->ids);
 	free(copy->msgs);
-	free(copy->timestamps);
+	free(copy->times);
 	copy->ids = malloc(queue->count * sizeof(uint32_t));
 	copy->msgs = malloc(queue->count * sizeof(t_msg));
-	copy->timestamps = malloc(queue->count * sizeof(uint32_t));
-	if (copy->ids == NULL || copy->msgs == NULL || copy->timestamps == NULL)
+	copy->times = malloc(queue->count * sizeof(uint32_t));
+	if (copy->ids == NULL || copy->msgs == NULL || copy->times == NULL)
 	{
 		printf("Failed to allocate messages! Message printer will exit\n");
 		pthread_mutex_unlock(&queue->msg_mutex);
@@ -67,7 +67,7 @@ static bool	copy_queue(t_msg_queue *queue, t_msg_queue *copy)
 	}
 	ft_memcpy(copy->ids, queue->ids, queue->count * sizeof(uint32_t));
 	ft_memcpy(copy->msgs, queue->msgs, queue->count * sizeof(t_msg));
-	ft_memcpy(copy->timestamps, queue->timestamps, queue->count * sizeof(uint32_t));
+	ft_memcpy(copy->times, queue->times, queue->count * sizeof(uint32_t));
 	return (true);
 }
 
@@ -96,7 +96,7 @@ void	*listen_messages(void *arg)
 	}
 	free(copy.ids);
 	free(copy.msgs);
-	free(copy.timestamps);
+	free(copy.times);
 	return (NULL);
 }
 
@@ -114,7 +114,7 @@ void	queue_message(t_philo *philo, t_msg msg, uint32_t timestamp)
 	}
 	queue->ids[queue->count] = philo->id;
 	queue->msgs[queue->count] = msg;
-	queue->timestamps[queue->count] = timestamp;
+	queue->times[queue->count] = timestamp;
 	queue->count++;
 	pthread_mutex_unlock(&queue->msg_mutex);
 }

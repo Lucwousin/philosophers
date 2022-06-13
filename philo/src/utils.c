@@ -14,7 +14,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <libc.h>
+#include <string.h>
 
 uint64_t	get_time(void)
 {
@@ -59,7 +59,6 @@ void	*ft_memcpy(void *dst, const void *src, size_t len)
 	}
 	return (dst);
 }
-
 
 void	smart_sleep(uint64_t duration)
 {

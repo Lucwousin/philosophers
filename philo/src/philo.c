@@ -35,7 +35,7 @@ static void	cleanup(t_state *state)
 	free(state->philos);
 	free(state->msg_queue.ids);
 	free(state->msg_queue.msgs);
-	free(state->msg_queue.timestamps);
+	free(state->msg_queue.times);
 }
 
 static int	exit_msg(t_state *state, const char *msg)

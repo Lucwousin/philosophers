@@ -64,8 +64,8 @@ bool	allocate_arrays(t_state *state)
 	state->forks = ft_calloc(num_philos, sizeof(t_mutex));
 	state->msg_queue.msgs = ft_calloc(num_philos * 4, sizeof(t_msg));
 	state->msg_queue.ids = ft_calloc(num_philos * 4, sizeof(uint32_t));
-	state->msg_queue.timestamps = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	state->msg_queue.times = ft_calloc(num_philos * 4, sizeof(uint32_t));
 	return (state->philos != NULL && state->forks != NULL
 		&& state->msg_queue.msgs != NULL && state->msg_queue.ids != NULL
-		&& state->msg_queue.timestamps != NULL);
+		&& state->msg_queue.times != NULL);
 }

@@ -65,7 +65,7 @@ typedef struct s_philo {
 typedef struct s_msg_queue {
 	uint32_t	count;
 	uint32_t	*ids;
-	uint32_t	*timestamps;
+	uint32_t	*times;
 	t_msg		*msgs;
 	t_mutex		msg_mutex;
 }	t_msg_queue;
