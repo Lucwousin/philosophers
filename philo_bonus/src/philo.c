@@ -13,9 +13,44 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+static char	*get_sem_name(uint32_t id, char name[16])
+{
+	int32_t	i;
+	bool	done;
+
+	i = 0;
+	while (i < 7)
+	{
+		name[i] = "/philo_"[i];
+		++i;
+	}
+	done = false;
+	while (!done)
+	{
+		name[i++] = (char)(id % 10u + '0');
+		done = (id % 10u) == 0;
+		id /= 10;
+	}
+	name[i] = '\0';
+	return (name);
+}
+
 static void	cleanup(t_sim *sim)
 {
-	(void) sim;
+	for (uint32_t i = 0; i < sim->settings[N_PHILO]; i++)
+	{
+		char name[16];
+		get_sem_name(i, name);
+		sem_unlink(name);
+	}
+	sem_close(sim->forks);
+	sem_close(sim->start);
+	sem_close(sim->print);
+	sem_close(sim->enough);
+	sem_unlink(FORKS_SEM);
+	sem_unlink(START_SEM);
+	sem_unlink(PRINT_SEM);
+	sem_unlink(DIET_SEM);
 }
 
 static int	exit_msg(t_sim *sim, const char *msg)
@@ -58,4 +93,5 @@ int	main(int argc, char **argv)
 	if (!simulate(&sim))
 		return (exit_msg(&sim, SIM_MES));
 	wait_children(&sim);
+	cleanup(&sim);
 }

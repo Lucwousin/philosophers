@@ -2,18 +2,18 @@
 
 void	go_think(t_philo *philo)
 {
-	send_message(philo->id, THINK, get_time() - philo->sim->start_time);
+	send_message(philo->sim, philo->id, THINK, get_time());
 }
 
 void	go_eat(t_philo *philo)
 {
 	sem_wait(philo->sim->forks);
-	send_message(philo->id, FORK, get_time() - philo->sim->start_time);
+	send_message(philo->sim, philo->id, FORK, get_time());
 	sem_wait(philo->sim->forks);
-	send_message(philo->id, FORK, get_time() - philo->sim->start_time);
+	send_message(philo->sim, philo->id, FORK, get_time());
 	sem_wait(philo->semaphore);
 	philo->last_eaten = get_time();
-	send_message(philo->id, EAT, philo->last_eaten - philo->sim->start_time);
+	send_message(philo->sim, philo->id, EAT, philo->last_eaten);
 	sem_post(philo->semaphore);
 	smart_sleep(philo->sim->settings[T_EAT]);
 	sem_wait(philo->semaphore);
@@ -26,6 +26,6 @@ void	go_eat(t_philo *philo)
 
 void	go_sleep(t_philo *philo)
 {
-	send_message(philo->id, SLEEP, get_time() - philo->sim->start_time);
+	send_message(philo->sim, philo->id, SLEEP, get_time());
 	smart_sleep(philo->sim->settings[T_SLEEP]);
 }

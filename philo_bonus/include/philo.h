@@ -17,6 +17,7 @@
 # define SIM_MES "Something went wrong during simulation"
 # define FORKS_SEM "/philo_forks"
 # define START_SEM "/philo_start"
+# define PRINT_SEM "/philo_print"
 # define DIET_SEM "/philo_diet"
 
 enum e_exitcode {
@@ -54,6 +55,7 @@ typedef struct s_simulation {
 	pid_t		*philos;
 	sem_t		*forks;
 	sem_t		*start;
+	sem_t		*print;
 	sem_t		*enough;
 }	t_sim;
 
@@ -77,7 +79,7 @@ void		go_think(t_philo *philo);
 void		go_eat(t_philo *philo);
 void		go_sleep(t_philo *philo);
 
-void		send_message(uint32_t id, t_msg msg, uint32_t time);
+void		send_message(t_sim *sim, uint32_t id, t_msg msg, uint64_t time);
 
 uint64_t	get_time(void);
 void		smart_sleep(uint64_t duration);

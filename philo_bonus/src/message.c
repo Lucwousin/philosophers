@@ -16,7 +16,10 @@ static const char	*g_msgs[] = {
 [END] = "philosophers ate enough - simulation ended"
 };
 
-void	send_message(uint32_t id, t_msg msg, uint32_t time)
+void	send_message(t_sim *sim, uint32_t id, t_msg msg, uint64_t time)
 {
-	printf(FORMAT_MSG, time, id, g_msgs[msg]);
+	sem_wait(sim->print);
+	printf(FORMAT_MSG, (uint32_t)(time - sim->start_time), id, g_msgs[msg]);
+	if (msg != DIE && msg != END)
+		sem_post(sim->print);
 }
