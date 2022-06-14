@@ -13,34 +13,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static char	*get_sem_name(uint32_t id, char name[16])
-{
-	int32_t	i;
-	bool	done;
-
-	i = 0;
-	while (i < 7)
-	{
-		name[i] = "/philo_"[i];
-		++i;
-	}
-	done = false;
-	while (!done)
-	{
-		name[i++] = (char)(id % 10u + '0');
-		done = (id % 10u) == 0;
-		id /= 10;
-	}
-	name[i] = '\0';
-	return (name);
-}
-
 static void	cleanup(t_sim *sim)
 {
-	for (uint32_t i = 0; i < sim->settings[N_PHILO]; i++)
+	char		name[16];
+	uint32_t	id;
+
+	id = 0;
+	while (id++ < sim->settings[N_PHILO])
 	{
-		char name[16];
-		get_sem_name(i, name);
+		get_sem_name(id, name);
 		sem_unlink(name);
 	}
 	sem_close(sim->forks);

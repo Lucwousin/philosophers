@@ -53,3 +53,22 @@ void	smart_sleep(uint64_t duration)
 		usleep((dif_time * 2 * 1000) / 3);
 	}
 }
+
+char	*get_sem_name(uint32_t id, char name[16])
+{
+	int32_t	i;
+
+	i = 0;
+	while (i < 7)
+	{
+		name[i] = "/philo_"[i];
+		++i;
+	}
+	while (id != 0)
+	{
+		name[i++] = (char)(id % 10);
+		id /= 10;
+	}
+	name[i] = '\0';
+	return (name);
+}

@@ -1,25 +1,5 @@
 #include "philo.h"
 #include <stdlib.h>
-#include <printf.h>
-
-static char	*get_sem_name(uint32_t id, char name[16])
-{
-	int32_t	i;
-
-	i = 0;
-	while (i < 7)
-	{
-		name[i] = "/philo_"[i];
-		++i;
-	}
-	while (id != 0)
-	{
-		name[i++] = (char)(id % 10);
-		id /= 10;
-	}
-	name[i] = '\0';
-	return (name);
-}
 
 static void	init_philo(t_philo *this, uint32_t id, t_sim *sim)
 {

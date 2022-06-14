@@ -85,5 +85,6 @@ uint64_t	get_time(void);
 void		smart_sleep(uint64_t duration);
 void		kill_all_children(t_sim *sim);
 bool		create_and_detach(void *(*routine)(void *), void *arg);
+char		*get_sem_name(uint32_t id, char name[16]);
 
 #endif
