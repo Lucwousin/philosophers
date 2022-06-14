@@ -15,7 +15,7 @@
 
 static void	cleanup(t_sim *sim)
 {
-
+	(void) sim;
 }
 
 static int	exit_msg(t_sim *sim, const char *msg)
@@ -24,6 +24,21 @@ static int	exit_msg(t_sim *sim, const char *msg)
 		cleanup(sim);
 	printf("Error: %s\n", msg);
 	return (EXIT_FAILURE);
+}
+
+static void	wait_children(t_sim *sim)
+{
+	int32_t	status;
+	int32_t	ret;
+
+	while (wait(&status) == -1)
+		;
+	if (WIFEXITED(status))
+		ret = WEXITSTATUS(status);
+	else
+		ret = -69;
+	if (ret != -69)
+		kill_all_children(sim);
 }
 
 int	main(int argc, char **argv)
@@ -36,5 +51,11 @@ int	main(int argc, char **argv)
 		return (exit_msg(NULL, ARGS_MES));
 	if (!validate_philo_count(sim.settings))
 		return (exit_msg(NULL, PHILO_N_MES));
-
+	if (!alloc_pid_arr(&sim))
+		return (exit_msg(&sim, ALLOC_MES));
+	if (!init_semaphores(&sim))
+		return (exit_msg(&sim, SEM_MES));
+	if (!simulate(&sim))
+		return (exit_msg(&sim, SIM_MES));
+	wait_children(&sim);
 }

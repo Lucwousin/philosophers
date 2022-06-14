@@ -1,5 +1,7 @@
 #include "philo.h"
 #include <signal.h>
+#include <pthread.h>
+#include <sys/time.h>
 
 void	kill_all_children(t_sim *sim)
 {
@@ -8,4 +10,46 @@ void	kill_all_children(t_sim *sim)
 	i = 0;
 	while (i < sim->settings[N_PHILO])
 		kill(sim->philos[i++], SIGKILL);
+}
+
+bool	create_and_detach(void *(*routine)(void *), void *arg)
+{
+	pthread_t	thread;
+
+	if (pthread_create(&thread, NULL, routine, arg) != 0)
+		return (false);
+	if (pthread_detach(thread) != 0)
+		return (false);
+	return (true);
+}
+
+uint64_t	get_time(void)
+{
+	struct timeval	t;
+
+	gettimeofday(&t, NULL);
+	return (t.tv_sec * 1000 + t.tv_usec / 1000);
+}
+
+void	smart_sleep(uint64_t duration)
+{
+	uint64_t	end_time;
+	uint64_t	cur_time;
+	uint64_t	dif_time;
+
+	end_time = get_time() + duration;
+	while (true)
+	{
+		cur_time = get_time();
+		if (cur_time >= end_time)
+			return ;
+		dif_time = end_time - cur_time;
+		if (dif_time <= 1)
+		{
+			while (get_time() < end_time)
+				usleep(750);
+			return ;
+		}
+		usleep((dif_time * 2 * 1000) / 3);
+	}
 }

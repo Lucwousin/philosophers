@@ -12,6 +12,7 @@
 #include "philo.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <printf.h>
 
 void	*dietician(void *arg)
 {
@@ -20,27 +21,14 @@ void	*dietician(void *arg)
 
 	sim = arg;
 	enough_count = 0;
-	while (true)
+	while (enough_count != sim->settings[N_PHILO])
 	{
 		sem_wait(sim->enough);
 		++enough_count;
-		if (enough_count == sim->settings[N_PHILO])
-		{
-			kill_all_children(sim);
-			return (NULL);
-		}
 	}
-}
-
-static bool	create_and_detach(void *(*routine)(void *), void *arg)
-{
-	pthread_t	thread;
-
-	if (pthread_create(&thread, NULL, routine, arg) != 0)
-		return (false);
-	if (pthread_detach(thread) != 0)
-		return (false);
-	return (true);
+	send_message(sim->settings[N_PHILO], END, get_time() - sim->start_time);
+	kill_all_children(sim);
+	return (NULL);
 }
 
 static bool	birth_children(t_sim *sim)
@@ -59,7 +47,7 @@ static bool	birth_children(t_sim *sim)
 			philosopher(i, sim);
 			exit(EXIT_FAILURE);
 		}
-		sim->philos[i] = pid;
+		sim->philos[i++] = pid;
 	}
 	return (true);
 }
@@ -69,6 +57,10 @@ bool	simulate(t_sim *sim)
 	if (sim->settings[N_EAT] != UINT32_MAX)
 		if (!create_and_detach(dietician, sim))
 			return (false);
+	sim->start_time = get_time() + 1;
 	if (!birth_children(sim))
 		return (false);
+	smart_sleep(sim->start_time - get_time());
+	sem_post(sim->start);
+	return (true);
 }

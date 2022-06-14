@@ -10,7 +10,7 @@ SRCS =	philo.c														\
 		utils.c														\
 		sim.c														\
 		philosopher.c												\
-		watcher.c													\
+		philo_action.c												\
 		message.c
 
 OBJS = $(SRCS:.c=.o)
