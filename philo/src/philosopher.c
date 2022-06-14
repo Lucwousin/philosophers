@@ -20,8 +20,8 @@ static void	go_eat(t_philo *philo)
 	pthread_mutex_lock(philo->forks[1]);
 	queue_message(philo, FORK, get_time() - philo->sim->start_time);
 	pthread_mutex_lock(&philo->eat_m);
-	queue_message(philo, EAT, get_time() - philo->sim->start_time);
 	philo->last_eaten = get_time();
+	queue_message(philo, EAT, philo->last_eaten - philo->sim->start_time);
 	pthread_mutex_unlock(&philo->eat_m);
 	smart_sleep(philo->sim->settings[T_EAT]);
 	pthread_mutex_lock(&philo->eat_m);
