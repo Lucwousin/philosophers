@@ -12,6 +12,7 @@
 
 #include "philo.h"
 #include <unistd.h>
+#include <stdio.h>
 
 static void	set_stopped(t_sim *sim)
 {
@@ -67,11 +68,11 @@ void	*watch_thread(void *arg)
 	sim = (t_sim *) arg;
 	pthread_mutex_lock(&sim->run_sim);
 	pthread_mutex_unlock(&sim->run_sim);
-	usleep(sim->settings[T_DIE] * 1000 / 2);
+	smart_sleep(sim->settings[T_DIE] - 1);
 	while (true)
 	{
 		if (check_philos(sim))
 			return (NULL);
-		usleep(1000);
+		smart_sleep(1);
 	}
 }

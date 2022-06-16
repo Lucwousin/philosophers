@@ -50,7 +50,7 @@ void	*philo_thread(void *arg)
 	philo->last_eaten = philo->sim->start_time;
 	pthread_mutex_unlock(&philo->sim->run_sim);
 	if (philo->id % 2)
-		usleep(1000);
+		smart_sleep(1);
 	while (running)
 	{
 		if (status == THINKING)

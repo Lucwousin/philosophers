@@ -25,7 +25,6 @@ static bool	create_threads(t_sim *sim)
 		if (pthread_create(&philos[i].thread, NULL, philo_thread, philos + i))
 			return (false);
 		++i;
-		usleep(500);
 	}
 	if (pthread_create(&sim->watcher, NULL, watch_thread, sim) || \
 		pthread_create(&sim->printer, NULL, listen_messages, sim))
@@ -53,7 +52,7 @@ bool	simulate(t_sim *sim)
 	pthread_mutex_lock(&sim->run_sim);
 	if (!create_threads(sim))
 		return (false);
-	usleep(1000);
+	smart_sleep(1);
 	sim->start_time = get_time();
 	pthread_mutex_unlock(&sim->run_sim);
 	join_threads(sim);
