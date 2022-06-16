@@ -9,9 +9,10 @@
 /*   Updated: 2022/06/13 14:27:09 by lsinke        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "philo.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static void	cleanup(t_sim *sim)
 {

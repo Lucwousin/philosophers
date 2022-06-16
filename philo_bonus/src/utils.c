@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   utils.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lsinke <lsinke@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/06/16 17:06:13 by lsinke        #+#    #+#                 */
+/*   Updated: 2022/06/16 17:06:13 by lsinke        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-#include <signal.h>
 #include <pthread.h>
+#include <signal.h>
 #include <sys/time.h>
 
 void	kill_all_children(t_sim *sim)

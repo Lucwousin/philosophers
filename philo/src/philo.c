@@ -9,6 +9,7 @@
 /*   Updated: 2022/06/02 13:36:14 by lsinke        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "philo.h"
 #include <stdio.h>
 #include <stdlib.h>

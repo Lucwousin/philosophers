@@ -12,9 +12,9 @@
 
 #ifndef PHILO_H
 # define PHILO_H
+# include <pthread.h>
 # include <stdint.h>
 # include <stdbool.h>
-# include <pthread.h>
 
 # define USAGE_MES "Usage: ./philo <n philo> <t die> <t eat> <t sleep> <n eat>"
 # define ARGS_MES "All arguments should fit in a 32 bit unsigned int"
@@ -24,7 +24,7 @@
 # define PHILO_MES "Failed to initialize philo mutexes"
 # define THREAD_MES "Failed to create threads"
 
-typedef pthread_mutex_t	t_mutex;
+typedef pthread_mutex_t		t_mutex;
 
 enum e_setting {
 	N_PHILO,

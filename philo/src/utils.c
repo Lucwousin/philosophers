@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <sys/time.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 uint64_t	get_time(void)
 {

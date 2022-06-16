@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   philo.h                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lsinke <lsinke@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/06/16 17:06:43 by lsinke        #+#    #+#                 */
+/*   Updated: 2022/06/16 17:06:43 by lsinke        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
+# include <semaphore.h>
 # include <stdint.h>
 # include <stdbool.h>
-# include <unistd.h>
-# include <semaphore.h>
 # include <sysexits.h>
+# include <unistd.h>
 
 # define USAGE_MES "Usage: ./philo <n philo> <t die> <t eat> <t sleep> <n eat>"
 # define ARGS_MES "All arguments should fit in a 32 bit unsigned int"

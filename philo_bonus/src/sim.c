@@ -3,12 +3,13 @@
 /*                                                        ::::::::            */
 /*   sim.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: lucas <lucas@student.codam.nl>               +#+                     */
+/*   By: lsinke <lsinke@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/06/13 15:22:30 by lucas         #+#    #+#                 */
-/*   Updated: 2022/06/13 15:22:30 by lucas         ########   odam.nl         */
+/*   Created: 2022/06/13 15:22:30 by lsinke        #+#    #+#                 */
+/*   Updated: 2022/06/13 15:22:30 by lsinke        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "philo.h"
 #include <pthread.h>
 #include <stdlib.h>

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   philosopher.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lsinke <lsinke@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/06/16 17:05:55 by lsinke        #+#    #+#                 */
+/*   Updated: 2022/06/16 17:05:55 by lsinke        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 #include <stdlib.h>
 
@@ -15,7 +27,7 @@ static void	init_philo(t_philo *this, uint32_t id, t_sim *sim)
 	this->times_eaten = 0;
 }
 
-static void *reaper(void *arg)
+static void	*reaper(void *arg)
 {
 	t_philo		*p;
 	uint64_t	time;

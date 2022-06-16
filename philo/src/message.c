@@ -12,9 +12,9 @@
 
 #include "philo.h"
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #ifdef DEBUG
 # define FORMAT_MSG "%u %u %s\n"

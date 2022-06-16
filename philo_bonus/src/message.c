@@ -1,5 +1,17 @@
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   message.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lsinke <lsinke@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/06/16 17:05:28 by lsinke        #+#    #+#                 */
+/*   Updated: 2022/06/16 17:05:28 by lsinke        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
+#include <stdio.h>
 
 #ifdef DEBUG
 # define FORMAT_MSG "%u %u %s\n"

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "philo.h"
+#include <unistd.h>
 
 static void	set_stopped(t_sim *sim)
 {

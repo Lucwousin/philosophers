@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "philo.h"
+#include <unistd.h>
 
 static bool	create_threads(t_sim *sim)
 {
