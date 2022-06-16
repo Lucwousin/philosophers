@@ -3,12 +3,14 @@
 
 static void	init_philo(t_philo *this, uint32_t id, t_sim *sim)
 {
+	char	sem_name[16];
+
 	this->id = id + 1;
-	get_sem_name(this->id, this->sem_name);
-	sem_unlink(this->sem_name);
-	this->semaphore = sem_open(this->sem_name, O_CREAT | O_EXCL, 000644, 1);
+	get_sem_name(this->id, sem_name);
+	sem_unlink(sem_name);
+	this->semaphore = sem_open(sem_name, O_CREAT | O_EXCL, 000644, 1);
 	if (this->semaphore == SEM_FAILED)
-		exit(SEM_FAILURE);
+		exit(EXIT_SEMAPHORE);
 	this->sim = sim;
 	this->times_eaten = 0;
 }
@@ -28,8 +30,6 @@ static void *reaper(void *arg)
 			break ;
 		sem_post(p->semaphore);
 	}
-	sem_close(p->semaphore);
-	sem_unlink(p->sem_name);
 	send_message(p->sim, p->id, DIE, time);
 	exit(EXIT_DEATH);
 }
@@ -59,8 +59,18 @@ void	philosopher(uint32_t id, t_sim *sim)
 	sem_wait(this.sim->start);
 	this.last_eaten = this.sim->start_time;
 	sem_post(this.sim->start);
-	create_and_detach(reaper, &this);
+	if (!create_and_detach(reaper, &this))
+		exit(EXIT_THREAD);
 	if (id % 2)
 		usleep(1000);
 	philo_loop(&this);
+}
+
+const char	*get_philo_err(uint8_t exit_code)
+{
+	if (exit_code == EXIT_SEMAPHORE)
+		return (P_SEM_ERR_MES);
+	if (exit_code == EXIT_THREAD)
+		return (P_THD_ERR_MES);
+	return ("Exit code is not an error! (errorception)");
 }

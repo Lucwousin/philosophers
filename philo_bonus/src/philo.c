@@ -47,16 +47,17 @@ static int	exit_msg(t_sim *sim, const char *msg)
 static void	wait_children(t_sim *sim)
 {
 	int32_t	status;
-	int32_t	ret;
+	uint8_t	ret;
 
 	while (wait(&status) == -1)
 		;
 	if (WIFEXITED(status))
+	{
 		ret = WEXITSTATUS(status);
-	else
-		ret = -69;
-	if (ret != -69)
 		kill_all_children(sim);
+		if (ret != EXIT_DEATH)
+			exit_msg(sim, get_philo_err(ret));
+	}
 }
 
 int	main(int argc, char **argv)

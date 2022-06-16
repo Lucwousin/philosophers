@@ -12,14 +12,19 @@
 # define ALLOC_MES "Failed to allocate memory for process ids"
 # define SEM_MES "Failed to initialize semaphores"
 # define SIM_MES "Something went wrong during simulation"
+
+# define P_SEM_ERR_MES "Philosopher's semaphore failed to open"
+# define P_THD_ERR_MES "Philosopher's death thread failed to start/detach"
+
 # define FORKS_SEM "/philo_forks"
 # define START_SEM "/philo_start"
 # define PRINT_SEM "/philo_print"
 # define DIET_SEM "/philo_diet"
 
 enum e_exitcode {
-	SEM_FAILURE = EX_CONFIG + 1,
-	EXIT_DEATH
+	EXIT_SEMAPHORE = EX__MAX + 1,
+	EXIT_THREAD,
+	EXIT_DEATH,
 };
 
 enum e_setting {
@@ -62,7 +67,6 @@ typedef struct s_philosopher {
 	uint64_t	last_eaten;
 	uint32_t	times_eaten;
 	sem_t		*semaphore;
-	char		sem_name[16];
 	t_sim		*sim;
 }	t_philo;
 
@@ -76,6 +80,7 @@ void		philosopher(uint32_t id, t_sim *sim);
 void		go_think(t_philo *philo);
 void		go_eat(t_philo *philo);
 void		go_sleep(t_philo *philo);
+const char	*get_philo_err(uint8_t exit_code);
 
 void		send_message(t_sim *sim, uint32_t id, t_msg msg, uint64_t time);
 
