@@ -66,7 +66,7 @@ char	*get_sem_name(uint32_t id, char name[16])
 	}
 	while (id != 0)
 	{
-		name[i++] = (char)(id % 10);
+		name[i++] = (char)(id % 10 + '0');
 		id /= 10;
 	}
 	name[i] = '\0';

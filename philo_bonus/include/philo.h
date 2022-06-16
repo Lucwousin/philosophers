@@ -10,9 +10,6 @@
 # define ARGS_MES "All arguments should fit in a 32 bit unsigned int"
 # define PHILO_N_MES "There should be more than one philosopher!"
 # define ALLOC_MES "Failed to allocate memory for process ids"
-# define MUTEX_MES "Failed to initialize mutexes"
-# define PHILO_MES "Failed to initialize philo mutexes"
-# define THREAD_MES "Failed to create threads"
 # define SEM_MES "Failed to initialize semaphores"
 # define SIM_MES "Something went wrong during simulation"
 # define FORKS_SEM "/philo_forks"
@@ -57,6 +54,7 @@ typedef struct s_simulation {
 	sem_t		*start;
 	sem_t		*print;
 	sem_t		*enough;
+	bool		done;
 }	t_sim;
 
 typedef struct s_philosopher {

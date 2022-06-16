@@ -24,6 +24,8 @@ static void	cleanup(t_sim *sim)
 		get_sem_name(id, name);
 		sem_unlink(name);
 	}
+	sim->done = true;
+	sem_post(sim->enough);
 	sem_close(sim->forks);
 	sem_close(sim->start);
 	sem_close(sim->print);

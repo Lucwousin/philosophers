@@ -23,6 +23,8 @@ void	*dietician(void *arg)
 	while (enough_count != sim->settings[N_PHILO])
 	{
 		sem_wait(sim->enough);
+		if (sim->done)
+			return (NULL);
 		++enough_count;
 	}
 	send_message(sim, sim->settings[N_PHILO], END, get_time());
@@ -53,10 +55,11 @@ static bool	birth_children(t_sim *sim)
 
 bool	simulate(t_sim *sim)
 {
+	sim->done = false;
 	if (sim->settings[N_EAT] != UINT32_MAX)
 		if (!create_and_detach(dietician, sim))
 			return (false);
-	sim->start_time = get_time() + (sim->settings[N_PHILO] / 4 + 2);
+	sim->start_time = get_time() + (sim->settings[N_PHILO] / 2 + 2);
 	if (!birth_children(sim))
 		return (false);
 	smart_sleep(sim->start_time - get_time());
