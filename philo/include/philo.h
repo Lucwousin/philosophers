@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// TODO: instead of copying in message loop, have 2 arrays and swap pointers (struct?)
+// TODO: instead of monitoring thread, do it from main thread?
+// TODO: check names of vars and funcs
+
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
