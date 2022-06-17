@@ -36,6 +36,7 @@ static void	cleanup(t_sim *sim)
 	sem_unlink(START_SEM);
 	sem_unlink(PRINT_SEM);
 	sem_unlink(DIET_SEM);
+	free(sim->philos);
 }
 
 static int	exit_msg(t_sim *sim, const char *msg)
