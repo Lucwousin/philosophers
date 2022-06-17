@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <fcntl.h>
 #include <stdlib.h>
 
 bool	alloc_pid_arr(t_sim *sim)

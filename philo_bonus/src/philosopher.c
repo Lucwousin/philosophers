@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <fcntl.h>
 #include <stdlib.h>
 
 static void	init_philo(t_philo *this, uint32_t id, t_sim *sim)
