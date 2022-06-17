@@ -59,7 +59,7 @@ void	smart_sleep(uint64_t duration)
 		if (dif_time <= 1)
 		{
 			while (get_time() < end_time)
-				usleep(750);
+				usleep(200);
 			return ;
 		}
 		usleep((dif_time * 2 * 1000) / 3);

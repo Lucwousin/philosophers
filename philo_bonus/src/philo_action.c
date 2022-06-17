@@ -15,6 +15,11 @@
 void	go_think(t_philo *philo)
 {
 	send_message(philo->sim, philo->id, THINK, get_time());
+	if (philo->sim->settings[N_PHILO] % 2 == 0 || \
+		philo->times_eaten != philo->next_long_think)
+		return ;
+	philo->next_long_think += (philo->sim->settings[N_PHILO] / 2);
+	smart_sleep(philo->sim->settings[T_EAT]);
 }
 
 void	go_eat(t_philo *philo)

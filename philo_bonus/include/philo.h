@@ -78,6 +78,7 @@ typedef struct s_philosopher {
 	uint32_t	id;
 	uint64_t	last_eaten;
 	uint32_t	times_eaten;
+	uint32_t	next_long_think;
 	sem_t		*semaphore;
 	t_sim		*sim;
 }	t_philo;

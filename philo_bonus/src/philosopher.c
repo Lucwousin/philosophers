@@ -18,29 +18,35 @@ static void	init_philo(t_philo *this, uint32_t id, t_sim *sim)
 	char	sem_name[16];
 
 	this->id = id + 1;
+	this->sim = sim;
+	this->last_eaten = sim->start_time;
+	this->times_eaten = 0;
 	get_sem_name(this->id, sem_name);
 	sem_unlink(sem_name);
 	this->semaphore = sem_open(sem_name, O_CREAT | O_EXCL, 000644, 1);
 	if (this->semaphore == SEM_FAILED)
 		exit(EXIT_SEMAPHORE);
-	this->sim = sim;
-	this->times_eaten = 0;
+	if (sim->settings[N_PHILO] % 2)
+		this->next_long_think = (sim->settings[N_PHILO] / 2) - (this->id / 2);
 }
 
 static void	*reaper(void *arg)
 {
 	t_philo		*p;
 	uint64_t	time;
+	uint64_t	last_eaten;
 
 	p = arg;
+	smart_sleep(p->sim->start_time + p->sim->settings[T_DIE] - get_time() - 1);
 	while (true)
 	{
-		usleep(1000);
 		sem_wait(p->semaphore);
 		time = get_time();
-		if (time - p->last_eaten >= p->sim->settings[T_DIE])
+		last_eaten = p->last_eaten;
+		if (time - last_eaten >= p->sim->settings[T_DIE])
 			break ;
 		sem_post(p->semaphore);
+		smart_sleep(last_eaten + p->sim->settings[T_DIE] - time);
 	}
 	send_message(p->sim, p->id, DIE, time);
 	exit(EXIT_DEATH);
@@ -50,7 +56,7 @@ _Noreturn static void	philo_loop(t_philo *this)
 {
 	t_status	status;
 
-	status = THINKING;
+	status = EATING;
 	while (true)
 	{
 		if (status == THINKING)
@@ -65,16 +71,15 @@ _Noreturn static void	philo_loop(t_philo *this)
 
 void	philosopher(uint32_t id, t_sim *sim)
 {
-	t_philo	this;
+	t_philo		this;
 
 	init_philo(&this, id, sim);
-	sem_wait(this.sim->start);
-	this.last_eaten = this.sim->start_time;
-	sem_post(this.sim->start);
 	if (!create_and_detach(reaper, &this))
 		exit(EXIT_THREAD);
-	if (id % 2)
-		usleep(1000);
+	smart_sleep(sim->start_time - get_time());
+	go_think(&this);
+	if (this.id % 2 == 0)
+		smart_sleep(sim->settings[T_EAT] / 2);
 	philo_loop(&this);
 }
 

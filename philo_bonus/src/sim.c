@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <pthread.h>
 #include <stdlib.h>
 
 void	*dietician(void *arg)
@@ -60,7 +59,7 @@ bool	simulate(t_sim *sim)
 	if (sim->settings[N_EAT] != UINT32_MAX)
 		if (!create_and_detach(dietician, sim))
 			return (false);
-	sim->start_time = get_time() + (sim->settings[N_PHILO] / 2 + 2);
+	sim->start_time = get_time() + sim->settings[N_PHILO];
 	if (!birth_children(sim))
 		return (false);
 	smart_sleep(sim->start_time - get_time());
