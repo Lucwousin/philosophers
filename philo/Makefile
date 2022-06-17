@@ -55,7 +55,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
-	@echo "Done cleaning archive $(CURDIR)/$(NAME)"
+	@echo "Done cleaning executable $(CURDIR)/$(NAME)"
 
 re: fclean
 	@$(MAKE)
