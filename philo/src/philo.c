@@ -34,9 +34,12 @@ static void	cleanup(t_sim *sim)
 	}
 	free(sim->forks);
 	free(sim->philos);
-	free(sim->msg_queue.ids);
-	free(sim->msg_queue.msgs);
-	free(sim->msg_queue.times);
+	free(sim->msg_queue.ids[0]);
+	free(sim->msg_queue.msgs[0]);
+	free(sim->msg_queue.times[0]);
+	free(sim->msg_queue.ids[1]);
+	free(sim->msg_queue.msgs[1]);
+	free(sim->msg_queue.times[1]);
 }
 
 static int	exit_msg(t_sim *sim, const char *msg)

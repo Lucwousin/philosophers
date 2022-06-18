@@ -64,10 +64,15 @@ bool	init_allocated_memory(t_sim *sim)
 	queue = &sim->msg_queue;
 	sim->philos = ft_calloc(num_philos, sizeof(t_philo));
 	sim->forks = ft_calloc(num_philos, sizeof(t_mutex));
-	queue->msgs = ft_calloc(num_philos * 4, sizeof(t_msg));
-	queue->ids = ft_calloc(num_philos * 4, sizeof(uint32_t));
-	queue->times = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	queue->msgs[0] = ft_calloc(num_philos * 4, sizeof(t_msg));
+	queue->ids[0] = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	queue->times[0] = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	queue->msgs[1] = ft_calloc(num_philos * 4, sizeof(t_msg));
+	queue->ids[1] = ft_calloc(num_philos * 4, sizeof(uint32_t));
+	queue->times[1] = ft_calloc(num_philos * 4, sizeof(uint32_t));
 	queue->count = 0;
 	return (sim->philos != NULL && sim->forks != NULL && \
-		queue->msgs != NULL && queue->ids != NULL && queue->times != NULL);
+		queue->msgs[0] != NULL && queue->msgs[1] != NULL && \
+		queue->ids[0] != NULL && queue->ids[1] != NULL && \
+		queue->times[0] != NULL && queue->times[1] != NULL);
 }

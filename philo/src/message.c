@@ -12,7 +12,6 @@
 
 #include "philo.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -31,18 +30,18 @@ static const char	*g_msgs[] = {
 [END] = "philosophers ate enough - simulation ended"
 };
 
-static bool	print_queue(t_sim *sim, t_msg_queue *queue)
+static bool	print_queue(t_sim *sim, t_msg_queue *queue, uint32_t count)
 {
 	uint32_t	i;
 	t_philo		*philo;
 	t_msg		msg;
 
 	i = 0;
-	while (i < queue->count)
+	while (i < count)
 	{
-		philo = sim->philos + queue->ids[i];
-		msg = queue->msgs[i];
-		printf(FORMAT_MSG, queue->times[i], philo->id + 1, g_msgs[msg]);
+		philo = sim->philos + queue->ids[1][i];
+		msg = queue->msgs[1][i];
+		printf(FORMAT_MSG, queue->times[1][i], philo->id + 1, g_msgs[msg]);
 		if (msg == DIE || msg == END)
 			return (false);
 		++i;
@@ -50,53 +49,42 @@ static bool	print_queue(t_sim *sim, t_msg_queue *queue)
 	return (true);
 }
 
-static bool	copy_queue(t_msg_queue *queue, t_msg_queue *copy)
+static void	swap_queue(t_msg_queue *queue)
 {
-	if (copy->count < queue->count)
-	{
-		free(copy->ids);
-		free(copy->msgs);
-		free(copy->times);
-		copy->ids = malloc(queue->count * sizeof(uint32_t));
-		copy->msgs = malloc(queue->count * sizeof(t_msg));
-		copy->times = malloc(queue->count * sizeof(uint32_t));
-		if (copy->ids == NULL || copy->msgs == NULL || copy->times == NULL)
-		{
-			printf("Failed to allocate messages! Message printer will exit\n");
-			pthread_mutex_unlock(&queue->msg_mutex);
-			return (false);
-		}
-	}
-	copy->count = queue->count;
-	ft_memcpy(copy->ids, queue->ids, queue->count * sizeof(uint32_t));
-	ft_memcpy(copy->msgs, queue->msgs, queue->count * sizeof(t_msg));
-	ft_memcpy(copy->times, queue->times, queue->count * sizeof(uint32_t));
-	return (true);
+	uint32_t	*ids;
+	uint32_t	*times;
+	t_msg		*msgs;
+
+	ids = queue->ids[0];
+	times = queue->times[0];
+	msgs = queue->msgs[0];
+	queue->ids[0] = queue->ids[1];
+	queue->times[0] = queue->times[1];
+	queue->msgs[0] = queue->msgs[1];
+	queue->ids[1] = ids;
+	queue->times[1] = times;
+	queue->msgs[1] = msgs;
 }
 
 void	*listen_messages(void *arg)
 {
 	t_sim		*sim;
 	t_msg_queue	*queue;
-	t_msg_queue	copy;
+	uint32_t	count;
 
 	sim = arg;
 	queue = &sim->msg_queue;
-	memset(&copy, 0, sizeof(t_msg_queue));
 	while (true)
 	{
 		pthread_mutex_lock(&queue->msg_mutex);
-		if (!copy_queue(queue, &copy))
-			break ;
+		swap_queue(queue);
+		count = queue->count;
 		queue->count = 0;
 		pthread_mutex_unlock(&queue->msg_mutex);
-		if (!print_queue(sim, &copy))
+		if (!print_queue(sim, queue, count))
 			break ;
 		usleep(500);
 	}
-	free(copy.ids);
-	free(copy.msgs);
-	free(copy.times);
 	return (NULL);
 }
 
@@ -112,9 +100,9 @@ void	queue_message(t_philo *philo, t_msg msg, uint32_t timestamp)
 		pthread_mutex_unlock(&queue->msg_mutex);
 		return ;
 	}
-	queue->ids[queue->count] = philo->id;
-	queue->msgs[queue->count] = msg;
-	queue->times[queue->count] = timestamp;
+	queue->ids[0][queue->count] = philo->id;
+	queue->msgs[0][queue->count] = msg;
+	queue->times[0][queue->count] = timestamp;
 	queue->count++;
 	pthread_mutex_unlock(&queue->msg_mutex);
 }

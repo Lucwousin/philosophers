@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// TODO: instead of copying in message loop, have 2 arrays and swap pointers (struct?)
 // TODO: instead of monitoring thread, do it from main thread?
 // TODO: check names of vars and funcs
 
@@ -68,9 +67,9 @@ typedef struct s_philo {
 
 typedef struct s_msg_queue {
 	uint32_t	count;
-	uint32_t	*ids;
-	uint32_t	*times;
-	t_msg		*msgs;
+	uint32_t	*ids[2];
+	uint32_t	*times[2];
+	t_msg		*msgs[2];
 	t_mutex		msg_mutex;
 }	t_msg_queue;
 
@@ -102,7 +101,6 @@ void		queue_message(t_philo *philo, t_msg msg, uint32_t timestamp);
 uint64_t	get_time(void);
 void		smart_sleep(uint64_t duration);
 void		*ft_calloc(size_t count, size_t size);
-void		*ft_memcpy(void *dst, const void *src, size_t len);
 bool		check_stopped(t_sim *sim);
 
 #endif
