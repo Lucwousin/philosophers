@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// TODO: instead of monitoring thread, do it from main thread?
 // TODO: check names of vars and funcs
 
 #ifndef PHILO_H
@@ -79,7 +78,6 @@ typedef struct s_simulation {
 	t_mutex		*forks;
 	uint64_t	start_time;
 	t_mutex		run_sim;
-	pthread_t	watcher;
 	pthread_t	printer;
 	t_msg_queue	msg_queue;
 	bool		stopped;
@@ -92,8 +90,9 @@ bool		init_philosophers(t_sim *sim);
 bool		init_mutexes(t_sim *sim);
 
 bool		simulate(t_sim *sim);
+void		watch_philos(t_sim *sim);
+
 void		*philo_thread(void *arg);
-void		*watch_thread(void *arg);
 
 void		*listen_messages(void *arg);
 void		queue_message(t_philo *philo, t_msg msg, uint32_t timestamp);

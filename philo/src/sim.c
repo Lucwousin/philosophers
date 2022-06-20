@@ -26,8 +26,7 @@ static bool	create_threads(t_sim *sim)
 			return (false);
 		++i;
 	}
-	if (pthread_create(&sim->watcher, NULL, watch_thread, sim) || \
-		pthread_create(&sim->printer, NULL, listen_messages, sim))
+	if (pthread_create(&sim->printer, NULL, listen_messages, sim))
 		return (false);
 	return (true);
 }
@@ -42,7 +41,6 @@ static void	join_threads(t_sim *sim)
 		pthread_join(sim->philos[i].thread, NULL);
 		++i;
 	}
-	pthread_join(sim->watcher, NULL);
 	pthread_join(sim->printer, NULL);
 }
 
@@ -55,6 +53,7 @@ bool	simulate(t_sim *sim)
 	smart_sleep(1);
 	sim->start_time = get_time();
 	pthread_mutex_unlock(&sim->run_sim);
+	watch_philos(sim);
 	join_threads(sim);
 	return (true);
 }
