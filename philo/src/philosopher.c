@@ -13,6 +13,11 @@
 #include "philo.h"
 #include <unistd.h>
 
+static void	go_think(t_philo *philo)
+{
+	queue_message(philo, THINK, get_time() - philo->sim->start_time);
+}
+
 static void	go_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->forks[0]);
@@ -44,17 +49,18 @@ void	*philo_thread(void *arg)
 	bool		running;
 
 	philo = (t_philo *) arg;
-	status = THINKING;
+	status = EATING;
 	running = true;
 	pthread_mutex_lock(&philo->sim->run_sim);
-	philo->last_eaten = philo->sim->start_time;
 	pthread_mutex_unlock(&philo->sim->run_sim);
+	philo->last_eaten = philo->sim->start_time;
+	go_think(philo);
 	if (philo->id % 2)
 		smart_sleep(1);
 	while (running)
 	{
 		if (status == THINKING)
-			queue_message(philo, THINK, get_time() - philo->sim->start_time);
+			go_think(philo);
 		else if (status == EATING)
 			go_eat(philo);
 		else if (status == SLEEPING)
