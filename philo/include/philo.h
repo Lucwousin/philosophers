@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// TODO: check names of vars and funcs
-
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
