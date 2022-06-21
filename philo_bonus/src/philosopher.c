@@ -50,7 +50,7 @@ static void	*reaper(void *arg)
 		smart_sleep(last_eaten + p->sim->settings[T_DIE] - time);
 	}
 	send_message(p->sim, p->id, DIE, time);
-	free(p->sim->philos);
+	free(p->sim->p_pids);
 	exit(EXIT_DEATH);
 }
 

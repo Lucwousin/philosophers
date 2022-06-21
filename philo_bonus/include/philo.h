@@ -31,7 +31,7 @@
 # define FORKS_SEM "/philo_forks"
 # define START_SEM "/philo_start"
 # define PRINT_SEM "/philo_print"
-# define DIET_SEM "/philo_diet"
+# define SATED_SEM "/philo_sated"
 
 enum e_exitcode {
 	EXIT_SEMAPHORE = EX__MAX + 1,
@@ -66,11 +66,11 @@ typedef enum e_status {
 typedef struct s_simulation {
 	uint32_t	settings[5];
 	uint64_t	start_time;
-	pid_t		*philos;
+	pid_t		*p_pids;
 	sem_t		*forks;
 	sem_t		*start;
 	sem_t		*print;
-	sem_t		*enough;
+	sem_t		*sated;
 	bool		done;
 }	t_sim;
 

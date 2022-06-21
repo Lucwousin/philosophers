@@ -27,16 +27,16 @@ static void	cleanup(t_sim *sim)
 		sem_unlink(name);
 	}
 	sim->done = true;
-	sem_post(sim->enough);
+	sem_post(sim->sated);
 	sem_close(sim->forks);
 	sem_close(sim->start);
 	sem_close(sim->print);
-	sem_close(sim->enough);
+	sem_close(sim->sated);
 	sem_unlink(FORKS_SEM);
 	sem_unlink(START_SEM);
 	sem_unlink(PRINT_SEM);
-	sem_unlink(DIET_SEM);
-	free(sim->philos);
+	sem_unlink(SATED_SEM);
+	free(sim->p_pids);
 }
 
 static int	exit_msg(t_sim *sim, const char *msg)

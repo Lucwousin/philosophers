@@ -14,9 +14,9 @@
 #include <stdio.h>
 
 #ifdef DEBUG
-# define FORMAT_MSG "%u %u %s\n"
+# define FORMAT_MSG "%llu %u %s\n"
 #else
-# define FORMAT_MSG "%8ums - %3u %s\n"
+# define FORMAT_MSG "%8llums - %3u %s\n"
 #endif
 
 static const char	*g_msgs[] = {
@@ -25,13 +25,13 @@ static const char	*g_msgs[] = {
 [SLEEP] = "is sleeping",
 [THINK] = "is thinking",
 [DIE] = "died",
-[END] = "philosophers ate enough - simulation ended"
+[END] = "philosophers ate sated - simulation ended"
 };
 
 void	send_message(t_sim *sim, uint32_t id, t_msg msg, uint64_t time)
 {
 	sem_wait(sim->print);
-	printf(FORMAT_MSG, (uint32_t)(time - sim->start_time), id, g_msgs[msg]);
+	printf(FORMAT_MSG, time - sim->start_time, id, g_msgs[msg]);
 	if (msg != DIE && msg != END)
 		sem_post(sim->print);
 }

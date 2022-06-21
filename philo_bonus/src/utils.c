@@ -21,7 +21,7 @@ void	kill_all_children(t_sim *sim)
 
 	i = 0;
 	while (i < sim->settings[N_PHILO])
-		kill(sim->philos[i++], SIGKILL);
+		kill(sim->p_pids[i++], SIGKILL);
 }
 
 bool	create_and_detach(void *(*routine)(void *), void *arg)

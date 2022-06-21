@@ -22,7 +22,7 @@ void	*dietician(void *arg)
 	enough_count = 0;
 	while (enough_count != sim->settings[N_PHILO])
 	{
-		sem_wait(sim->enough);
+		sem_wait(sim->sated);
 		if (sim->done)
 			return (NULL);
 		++enough_count;
@@ -44,11 +44,8 @@ static bool	birth_children(t_sim *sim)
 		if (pid < 0)
 			return (false);
 		if (pid == 0)
-		{
 			philosopher(i, sim);
-			exit(EXIT_FAILURE);
-		}
-		sim->philos[i++] = pid;
+		sim->p_pids[i++] = pid;
 	}
 	return (true);
 }

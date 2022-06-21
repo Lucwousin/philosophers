@@ -35,7 +35,7 @@ void	go_eat(t_philo *philo)
 	smart_sleep(philo->sim->settings[T_EAT]);
 	sem_wait(philo->semaphore);
 	if (++philo->times_eaten == philo->sim->settings[N_EAT])
-		sem_post(philo->sim->enough);
+		sem_post(philo->sim->sated);
 	sem_post(philo->semaphore);
 	sem_post(philo->sim->forks);
 	sem_post(philo->sim->forks);
