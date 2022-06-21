@@ -13,10 +13,10 @@
 #include "philo.h"
 #include <stdio.h>
 
-#ifdef DEBUG
-# define FORMAT_MSG "%llu %u %s\n"
-#else
+#ifdef PRETTY
 # define FORMAT_MSG "%8llums - %3u %s\n"
+#else
+# define FORMAT_MSG "%llu %u %s\n"
 #endif
 
 static const char	*g_msgs[] = {
@@ -25,7 +25,7 @@ static const char	*g_msgs[] = {
 [SLEEP] = "is sleeping",
 [THINK] = "is thinking",
 [DIE] = "died",
-[END] = "philosophers ate sated - simulation ended"
+[END] = "philosophers ate enough - simulation ended"
 };
 
 void	send_message(t_sim *sim, uint32_t id, t_msg msg, uint64_t time)

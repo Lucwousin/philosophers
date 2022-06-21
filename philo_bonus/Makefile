@@ -34,8 +34,8 @@ CFLAGS += -Wall -Werror -Wextra -g -pthread
 ifeq ($(TSAN), 1)
 CFLAGS += -fsanitize=thread
 endif
-ifeq ($(DEBUG), 1)
-CFLAGS += -DDEBUG
+ifeq ($(PRETTY), 1)
+CFLAGS += -DPRETTY
 endif
 
 all: $(NAME)

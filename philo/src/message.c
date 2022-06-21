@@ -15,10 +15,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef DEBUG
-# define FORMAT_MSG "%u %u %s\n"
-#else
+#ifdef PRETTY
 # define FORMAT_MSG "%8ums - %3u %s\n"
+#else
+# define FORMAT_MSG "%u %u %s\n"
 #endif
 
 static const char	*g_msgs[] = {

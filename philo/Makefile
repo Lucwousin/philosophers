@@ -29,13 +29,13 @@ OBJS = $(SRCS:.c=.o)
 OBJS_P = $(addprefix $(OBJ_DIR), $(OBJS))
 
 CC = gcc
-CFLAGS += -Wall -Werror -Wextra -pthread
+CFLAGS += -Wall -Werror -Wextra -pthread -g
 
 ifeq ($(TSAN), 1)
 CFLAGS += -fsanitize=thread
 endif
-ifeq ($(DEBUG), 1)
-CFLAGS += -DDEBUG -g
+ifeq ($(PRETTY), 1)
+CFLAGS += -DPRETTY
 endif
 
 all: $(NAME)
